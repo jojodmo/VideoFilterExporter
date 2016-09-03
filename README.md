@@ -2,6 +2,8 @@
 
 This is a simple, lightweight iOS utility that allows applying for saving `AVAsset`s with `CIFilter`s applied.
 
+The `kCVPixelBufferPixelFormatTypeKey` value of both `requiredPixelBufferAttributesForRenderContext` and `sourcePixelBufferAttributes` in the `VideoFilterCompositor` class can be altered to fit your needs
+
 It is important to keep in mind that as the length of the video increses, the time it takes to process also increses. This utility is in no way intended for real-time processing, and can take a few seconds to process a one minute video.
 
 ## Usage
