@@ -9,6 +9,8 @@ It is important to keep in mind that as the length of the video increses, the ti
     let asset: AVAsset //your video
     let filters: [CIFilter] //an array of CIFilters to apply to the asset
     let exporter = VideoFilterExporter(asset: asset, filters: filters)
+    // there is also an initializer which accepts an additional context: CIContext parameter
+    // VideoFilterExporter(asset: asset, filters: filters, context: myCIContext)
     
     let url: NSURL //the URL to export the video with filters to
     exporter.export(toURL: url){(url: NSURL?) -> Void in
