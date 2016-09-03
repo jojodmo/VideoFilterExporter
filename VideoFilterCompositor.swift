@@ -49,13 +49,16 @@ class VideoFilterCompositor : NSObject, AVVideoCompositing{
                     return
                 }
                 
-                let image = CIImage(CVPixelBuffer: pixels)
-                let filtered = instruction.filters.apply(toImage: image)
+                var image = CIImage(CVPixelBuffer: pixels)
+                for filter in instruction.filters{
+                  filter.setValue(image, forKey: kCIInputImageKey)
+                  image = filter.outputImage ?? image
+                }
                 
                 let newBuffer: CVPixelBuffer? = self.renderContext.newPixelBuffer()
 
                 if let buffer = newBuffer{
-                    instruction.context.render(filtered, toCVPixelBuffer: buffer)
+                    instruction.context.render(image, toCVPixelBuffer: buffer)
                     request.finishWithComposedVideoFrame(buffer)
                 }
                 else{
