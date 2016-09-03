@@ -27,6 +27,13 @@ class VideoFilterExport{
         self.context = context
     }
     
+    convenience init(asset: AVAsset, filters: [CIFilter]){
+        let eagl = EAGLContext(API: EAGLRenderingAPI.OpenGLES2)
+        let context = CIContext(EAGLContext: eagl, options: [kCIContextWorkingColorSpace : NSNull()])
+        
+        self.init(asset: asset, filters: filters, context: context)
+    }
+    
     func export(toURL url: NSURL, callback: (url: NSURL?) -> Void){
         guard let track: AVAssetTrack = self.asset.tracksWithMediaType(AVMediaTypeVideo).first else{callback(url: nil); return}
         
