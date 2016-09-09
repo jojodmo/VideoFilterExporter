@@ -18,11 +18,14 @@ import Foundation
 
 class VideoFilterCompositor : NSObject, AVVideoCompositing{
     
+    // You may alter the value of kCVPixelBufferPixelFormatTypeKey to fit your needs
     var requiredPixelBufferAttributesForRenderContext: [String : AnyObject] = [
         kCVPixelBufferPixelFormatTypeKey as String : NSNumber(unsignedInt: kCVPixelFormatType_32BGRA),
         kCVPixelBufferOpenGLESCompatibilityKey as String : NSNumber(bool: true),
         kCVPixelBufferOpenGLCompatibilityKey as String : NSNumber(bool: true)
     ]
+    
+    // You may alter the value of kCVPixelBufferPixelFormatTypeKey to fit your needs
     var sourcePixelBufferAttributes: [String : AnyObject]? = [
         kCVPixelBufferPixelFormatTypeKey as String : NSNumber(unsignedInt: kCVPixelFormatType_32BGRA),
         kCVPixelBufferOpenGLESCompatibilityKey as String : NSNumber(bool: true),
