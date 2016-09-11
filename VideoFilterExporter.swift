@@ -39,22 +39,28 @@ class VideoFilterExport{
         
         let composition = AVMutableComposition()
         composition.naturalSize = track.naturalSize
-        let compositionTrack = composition.addMutableTrackWithMediaType(AVMediaTypeVideo, preferredTrackID: kCMPersistentTrackID_Invalid)
+        let videoTrack = composition.addMutableTrackWithMediaType(AVMediaTypeVideo, preferredTrackID: kCMPersistentTrackID_Invalid)
+        let audioTrack = composition.addMutableTrackWithMediaType(AVMediaTypeAudio, preferredTrackID: kCMPersistentTrackID_Invalid)
         
-        do{try compositionTrack.insertTimeRange(CMTimeRangeMake(kCMTimeZero, self.asset.duration), ofTrack: track, atTime: kCMTimeZero)}
+        do{try videoTrack.insertTimeRange(CMTimeRangeMake(kCMTimeZero, self.asset.duration), ofTrack: track, atTime: kCMTimeZero)}
         catch _{callback(url: nil); return}
         
-        let layerInstruction = AVMutableVideoCompositionLayerInstruction(assetTrack: compositionTrack)
-        layerInstruction.trackID = compositionTrack.trackID
+        if let audio = self.asset.tracksWithMediaType(AVMediaTypeAudio).first{
+            do{try audioTrack.insertTimeRange(CMTimeRangeMake(kCMTimeZero, self.asset.duration), ofTrack: audio, atTime: kCMTimeZero)}
+            catch _{callback(url: nil); return}
+        }
         
-        let instruction = VideoFilterCompositionInstruction(trackID: compositionTrack.trackID, filters: self.filters, context: self.context)
+        let layerInstruction = AVMutableVideoCompositionLayerInstruction(assetTrack: videoTrack)
+        layerInstruction.trackID = videoTrack.trackID
+        
+        let instruction = VideoFilterCompositionInstruction(trackID: videoTrack.trackID, filters: self.filters, context: self.context)
         instruction.timeRange = CMTimeRangeMake(kCMTimeZero, self.asset.duration)
         instruction.layerInstructions = [layerInstruction]
         
         let videoComposition = AVMutableVideoComposition()
         videoComposition.customVideoCompositorClass = VideoFilterCompositor.self
         videoComposition.frameDuration = CMTimeMake(1, 30)
-        videoComposition.renderSize = compositionTrack.naturalSize
+        videoComposition.renderSize = videoTrack.naturalSize
         videoComposition.instructions = [instruction]
         
         let session: AVAssetExportSession = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetHighestQuality)!
