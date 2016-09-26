@@ -18,15 +18,17 @@ import Foundation
 
 class VideoFilterCompositor : NSObject, AVVideoCompositing{
     
+    // For Swift 2.*, replace [String : Any] and [String : Any]? with [String : AnyObject] and [String : AnyObject]? respectively
+   
     // You may alter the value of kCVPixelBufferPixelFormatTypeKey to fit your needs
-    var requiredPixelBufferAttributesForRenderContext: [String : AnyObject] = [
+    var requiredPixelBufferAttributesForRenderContext: [String : Any] = [
         kCVPixelBufferPixelFormatTypeKey as String : NSNumber(unsignedInt: kCVPixelFormatType_32BGRA),
         kCVPixelBufferOpenGLESCompatibilityKey as String : NSNumber(bool: true),
         kCVPixelBufferOpenGLCompatibilityKey as String : NSNumber(bool: true)
     ]
     
     // You may alter the value of kCVPixelBufferPixelFormatTypeKey to fit your needs
-    var sourcePixelBufferAttributes: [String : AnyObject]? = [
+    var sourcePixelBufferAttributes: [String : Any]? = [
         kCVPixelBufferPixelFormatTypeKey as String : NSNumber(unsignedInt: kCVPixelFormatType_32BGRA),
         kCVPixelBufferOpenGLESCompatibilityKey as String : NSNumber(bool: true),
         kCVPixelBufferOpenGLCompatibilityKey as String : NSNumber(bool: true)
