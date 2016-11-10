@@ -6,7 +6,7 @@ The `kCVPixelBufferPixelFormatTypeKey` value of both `requiredPixelBufferAttribu
 
 It is important to keep in mind that as the length of the video increses, the time it takes to process also increses. This utility is in no way intended for real-time processing, and can take a few seconds to process a one minute video.
 
-Make sure that both the import URL and export URL end in either `.mp4` or `.mov`.
+**Make sure** that both the import URL (if it exists) and export URL end in either `.mp4` or `.mov`.
 
 ## Usage
 
