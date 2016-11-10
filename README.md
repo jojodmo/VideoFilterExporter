@@ -6,6 +6,8 @@ The `kCVPixelBufferPixelFormatTypeKey` value of both `requiredPixelBufferAttribu
 
 It is important to keep in mind that as the length of the video increses, the time it takes to process also increses. This utility is in no way intended for real-time processing, and can take a few seconds to process a one minute video.
 
+Make sure that both the import URL and export URL end in either `.mp4` or `.mov`.
+
 ## Usage
 
     let asset: AVAsset //your video
@@ -14,7 +16,8 @@ It is important to keep in mind that as the length of the video increses, the ti
     // there is also an initializer which accepts an additional context: CIContext parameter
     // VideoFilterExporter(asset: asset, filters: filters, context: myCIContext)
     
-    let url: URL //the URL to export the video with filters to
+    let url: URL // the URL to export the video with filters to.
+                 // MAKE SURE THIS ENDS IN EITHER .mp4 OR .mov
     exporter.export(toURL: url){(url: URL?) -> Void in
         // The filters have been applied and the new video is now at url
     }
