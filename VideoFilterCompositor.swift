@@ -22,29 +22,29 @@ class VideoFilterCompositor : NSObject, AVVideoCompositing{
    
     // You may alter the value of kCVPixelBufferPixelFormatTypeKey to fit your needs
     var requiredPixelBufferAttributesForRenderContext: [String : Any] = [
-        kCVPixelBufferPixelFormatTypeKey as String : NSNumber(unsignedInt: kCVPixelFormatType_32BGRA),
-        kCVPixelBufferOpenGLESCompatibilityKey as String : NSNumber(bool: true),
-        kCVPixelBufferOpenGLCompatibilityKey as String : NSNumber(bool: true)
+        kCVPixelBufferPixelFormatTypeKey as String : NSNumber(value: kCVPixelFormatType_32BGRA as UInt32),
+        kCVPixelBufferOpenGLESCompatibilityKey as String : NSNumber(value: true),
+        kCVPixelBufferOpenGLCompatibilityKey as String : NSNumber(value: true)
     ]
     
     // You may alter the value of kCVPixelBufferPixelFormatTypeKey to fit your needs
     var sourcePixelBufferAttributes: [String : Any]? = [
-        kCVPixelBufferPixelFormatTypeKey as String : NSNumber(unsignedInt: kCVPixelFormatType_32BGRA),
-        kCVPixelBufferOpenGLESCompatibilityKey as String : NSNumber(bool: true),
-        kCVPixelBufferOpenGLCompatibilityKey as String : NSNumber(bool: true)
+        kCVPixelBufferPixelFormatTypeKey as String : NSNumber(value: kCVPixelFormatType_32BGRA as UInt32),
+        kCVPixelBufferOpenGLESCompatibilityKey as String : NSNumber(value: true),
+        kCVPixelBufferOpenGLCompatibilityKey as String : NSNumber(value: true)
     ]
     
-    let renderQueue = dispatch_queue_create("com.jojodmo.videofilterexporter.renderingqueue", DISPATCH_QUEUE_SERIAL)
-    let renderContextQueue = dispatch_queue_create("com.jojodmo.videofilterexporter.rendercontextqueue", DISPATCH_QUEUE_SERIAL)
+    let renderQueue = DispatchQueue(label: "com.jojodmo.videofilterexporter.renderingqueue", attributes: [])
+    let renderContextQueue = DispatchQueue(label: "com.jojodmo.videofilterexporter.rendercontextqueue", attributes: [])
     
     var renderContext: AVVideoCompositionRenderContext!
     override init(){
         super.init()
     }
     
-    func startVideoCompositionRequest(request: AVAsynchronousVideoCompositionRequest){
+    func startVideoCompositionRequest(_ request: AVAsynchronousVideoCompositionRequest){
         autoreleasepool(){
-            dispatch_sync(self.renderQueue){
+            self.renderQueue.sync{
                 guard let instruction = request.videoCompositionInstruction as? VideoFilterCompositionInstruction else{
                     request.finishWithError(NSError(domain: "jojodmo.com", code: 760, userInfo: nil))
                     return
@@ -54,7 +54,7 @@ class VideoFilterCompositor : NSObject, AVVideoCompositing{
                     return
                 }
                 
-                var image = CIImage(CVPixelBuffer: pixels)
+                var image = CIImage(cvPixelBuffer: pixels)
                 for filter in instruction.filters{
                   filter.setValue(image, forKey: kCIInputImageKey)
                   image = filter.outputImage ?? image
@@ -63,18 +63,18 @@ class VideoFilterCompositor : NSObject, AVVideoCompositing{
                 let newBuffer: CVPixelBuffer? = self.renderContext.newPixelBuffer()
 
                 if let buffer = newBuffer{
-                    instruction.context.render(image, toCVPixelBuffer: buffer)
-                    request.finishWithComposedVideoFrame(buffer)
+                    instruction.context.render(image, to: buffer)
+                    request.finish(withComposedVideoFrame: buffer)
                 }
                 else{
-                    request.finishWithComposedVideoFrame(pixels)
+                    request.finish(withComposedVideoFrame: pixels)
                 }
             }
         }
     }
     
     func renderContextChanged(newRenderContext: AVVideoCompositionRenderContext){
-        dispatch_sync(self.renderContextQueue){
+        self.renderContextQueue.sync{
             self.renderContext = newRenderContext
         }
     }
