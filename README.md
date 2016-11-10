@@ -14,8 +14,8 @@ It is important to keep in mind that as the length of the video increses, the ti
     // there is also an initializer which accepts an additional context: CIContext parameter
     // VideoFilterExporter(asset: asset, filters: filters, context: myCIContext)
     
-    let url: NSURL //the URL to export the video with filters to
-    exporter.export(toURL: url){(url: NSURL?) -> Void in
+    let url: URL //the URL to export the video with filters to
+    exporter.export(toURL: url){(url: URL?) -> Void in
         // The filters have been applied and the new video is now at url
     }
     
@@ -23,7 +23,7 @@ It is important to keep in mind that as the length of the video increses, the ti
 
 This will take the video at the URL "\(NSHomeDirectory())/Documents/myVideo.mp4", apply a filter that sets the vibrance to **2**, then save the video to the URL "\(NSHomeDirectory())/Documents/vibranceVideo.mp4".
 
-    let asset: AVAsset = AVAsset(URL: NSURL(fileURLWithPath: "\(NSHomeDirectory())/Documents/myVideo.mp4"))
+    let asset: AVAsset = AVAsset(URL: URL(fileURLWithPath: "\(NSHomeDirectory())/Documents/myVideo.mp4"))
     var filters: [CIFilter] = []
             
     let vibrance = CIFilter(name: "CIVibrance")
@@ -33,7 +33,8 @@ This will take the video at the URL "\(NSHomeDirectory())/Documents/myVideo.mp4"
     }
             
     let exporter = VideoFilterExport(asset: asset, filters: filters)
-    exporter.export(toURL: NSURL(fileURLWithPath: "\(NSHomeDirectory())/Documents/vibranceVideo.mp4")){(url: NSURL?) -> Void in
+    exporter.export(toURL: URL(fileURLWithPath: "\(NSHomeDirectory())/Documents/vibranceVideo.mp4")){(url: URL?) -> Void in
         // The video with applied filters is now at the URL "\(NSHomeDirectory())/Documents/vibranceVideo.mp4"
+        // if no errors were encountered
     }
     
