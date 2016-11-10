@@ -28,26 +28,26 @@ class VideoFilterExport{
     }
     
     convenience init(asset: AVAsset, filters: [CIFilter]){
-        let eagl = EAGLContext(API: EAGLRenderingAPI.OpenGLES2)
-        let context = CIContext(EAGLContext: eagl, options: [kCIContextWorkingColorSpace : NSNull()])
+        let eagl = EAGLContext(API: EAGLRenderingAPI.openGLES2)
+        let context = CIContext(EAGLContext: eagl!, options: [kCIContextWorkingColorSpace : NSNull()])
         
         self.init(asset: asset, filters: filters, context: context)
     }
     
-    func export(toURL url: NSURL, callback: (url: NSURL?) -> Void){
-        guard let track: AVAssetTrack = self.asset.tracksWithMediaType(AVMediaTypeVideo).first else{callback(url: nil); return}
+    func export(toURL url: URL, @escaping callback: (url: URL?) -> Void){
+        guard let track: AVAssetTrack = self.asset.tracks(withMediaType: AVMediaTypeVideo).first else{callback(nil); return}
         
         let composition = AVMutableComposition()
         composition.naturalSize = track.naturalSize
-        let videoTrack = composition.addMutableTrackWithMediaType(AVMediaTypeVideo, preferredTrackID: kCMPersistentTrackID_Invalid)
-        let audioTrack = composition.addMutableTrackWithMediaType(AVMediaTypeAudio, preferredTrackID: kCMPersistentTrackID_Invalid)
+        let videoTrack = composition.addMutableTrack(withMediaType: AVMediaTypeVideo, preferredTrackID: kCMPersistentTrackID_Invalid)
+        let audioTrack = composition.addMutableTrack(withMediaType: AVMediaTypeAudio, preferredTrackID: kCMPersistentTrackID_Invalid)
         
-        do{try videoTrack.insertTimeRange(CMTimeRangeMake(kCMTimeZero, self.asset.duration), ofTrack: track, atTime: kCMTimeZero)}
-        catch _{callback(url: nil); return}
+        do{try videoTrack.insertTimeRange(CMTimeRangeMake(kCMTimeZero, self.asset.duration), of: track, at: kCMTimeZero)}
+        catch _{callback(nil); return}
         
-        if let audio = self.asset.tracksWithMediaType(AVMediaTypeAudio).first{
+        if let audio = self.asset.tracks(withMediaType: AVMediaTypeAudio).first{
             do{try audioTrack.insertTimeRange(CMTimeRangeMake(kCMTimeZero, self.asset.duration), ofTrack: audio, atTime: kCMTimeZero)}
-            catch _{callback(url: nil); return}
+            catch _{callback(nil); return}
         }
         
         let layerInstruction = AVMutableVideoCompositionLayerInstruction(assetTrack: videoTrack)
@@ -68,9 +68,9 @@ class VideoFilterExport{
         session.outputURL = url
         session.outputFileType = AVFileTypeMPEG4
         
-        session.exportAsynchronouslyWithCompletionHandler(){
-            dispatch_async(dispatch_get_main_queue()){
-                callback(url: url)
+        session.exportAsynchronously(){
+            DispatchQueue.main.async{
+                callback(url)
             }
         }
     }
