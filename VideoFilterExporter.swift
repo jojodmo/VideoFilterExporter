@@ -18,7 +18,8 @@ import Foundation
 
 class VideoFilterExport{
    
-   //For Swift 2.x, look at the history of this file at https://github.com/jojodmo/VideoFilterExporter/blob/cf6fcdb4852eae5a1c8a2ce0887bebfeb0f36a9a/VideoFilterExporter.swift
+   // For implementation in Swift 2.x, look at the history of this file at
+   // https://github.com/jojodmo/VideoFilterExporter/blob/cf6fcdb4852eae5a1c8a2ce0887bebfeb0f36a9a/VideoFilterExporter.swift
     
     let asset: AVAsset
     let filters: [CIFilter]
