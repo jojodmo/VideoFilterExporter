@@ -40,8 +40,8 @@ This will take the video at the URL "\(NSHomeDirectory())/Documents/myVideo.mp4"
         // The video with applied filters is now at the URL "\(NSHomeDirectory())/Documents/vibranceVideo.mp4"
         // if no errors were encountered
     }
-    
- ## Rotating a Video
+
+## Rotating a Video
  
  To rotate the video using this utility, use the `CIAffineTransform` filter
 
