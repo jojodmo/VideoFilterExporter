@@ -41,3 +41,32 @@ This will take the video at the URL "\(NSHomeDirectory())/Documents/myVideo.mp4"
         // if no errors were encountered
     }
     
+ ## Rotating a Video
+ 
+ To rotate the video using this utility, use the `CIAffineTransform` filter
+
+     let size = asset.tracks(withMediaType: AVMediaTypeVideo).first!.naturalSize
+
+     let degrees = // How many degrees to rotate the video by (multiple of 90)
+     let mirrored = // Whether or not the video should be mirrored
+     let extent = CGRect(x: 0, y: 0, width: size.width, height: size.height))
+
+     var tx = CGAffineTransform(
+         translationX: extent.width / 2,
+         y: extent.height / 2
+     )
+    
+     tx = tx.rotated(by: (CGFloat(degrees) / 90.0) * CGFloat(M_PI_2)) 
+     tx = tx.translatedBy(x: -extent.width / 2, y: -extent.height / 2)
+    
+     if(mirrored){
+         tx = tx.scaledBy(x: -1.0, y: 1.0)  
+         tx = tx.translatedBy(x: -extent.width, y: 0.0)
+     }
+    
+     let transformFilter = CIFilter(name: "CIAffineTransform")!
+     transformFilter.setDefaults()
+     transformFilter.setValue(NSValue(cgAffineTransform: tx, forKey: kCIInputTransformKey))
+
+     // Use transformFilter as one of the filters on the video
+    
