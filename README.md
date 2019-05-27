@@ -1,6 +1,6 @@
 # VideoFilterExporter
 
-This is a simple, lightweight iOS utility that allows applying for saving `AVAsset`s with `CIFilter`s applied.
+This is a simple, lightweight iOS utility that lets you save `AVAsset`s with `CIFilter`s applied.
 
 The `kCVPixelBufferPixelFormatTypeKey` value of both `requiredPixelBufferAttributesForRenderContext` and `sourcePixelBufferAttributes` in the `VideoFilterCompositor` class can be altered to fit your needs
 
