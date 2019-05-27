@@ -9,7 +9,7 @@ It is important to keep in mind that as the length of the video increses, the ti
 **Make sure** that both the import URL (if it exists) and export URL end in either `.mp4` or `.mov`.
 
 ## Usage
-
+```swift
     let asset: AVAsset //your video
     let filters: [CIFilter] //an array of CIFilters to apply to the asset
     let exporter = VideoFilterExporter(asset: asset, filters: filters)
@@ -21,7 +21,7 @@ It is important to keep in mind that as the length of the video increses, the ti
     exporter.export(toURL: url){(url: URL?) -> Void in
         // The filters have been applied and the new video is now at url
     }
-    
+```   
 ## Example
 
 This will take the video at the URL "\(NSHomeDirectory())/Documents/myVideo.mp4", apply a filter that sets the vibrance to **2**, then save the video to the URL "\(NSHomeDirectory())/Documents/vibranceVideo.mp4".
